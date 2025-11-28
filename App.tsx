@@ -3,21 +3,27 @@ import { DeviceFrame } from './components/DeviceFrame';
 import { TerminalHeader } from './components/TerminalHeader';
 import { NavigationSidebar } from './components/NavigationSidebar';
 import { ContentArea } from './components/ContentArea';
-import { Category } from './types';
+import { Category, Theme } from './types';
 
 function App() {
   const [activeCategory, setActiveCategory] = useState<Category>(Category.PROFILE);
+  const [theme, setTheme] = useState<Theme>('dark');
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   return (
-    <DeviceFrame>
-      <TerminalHeader />
-      <div className="flex flex-1 overflow-hidden relative">
+    <DeviceFrame theme={theme}>
+      <TerminalHeader theme={theme} onToggleTheme={toggleTheme} />
+      <div className={`flex flex-1 overflow-hidden relative ${theme === 'light' ? 'light-mode' : ''}`}>
         <NavigationSidebar 
           activeCategory={activeCategory} 
-          onSelect={setActiveCategory} 
+          onSelect={setActiveCategory}
+          theme={theme}
         />
-        <main className="flex-1 relative bg-oled-black">
-          <ContentArea category={activeCategory} />
+        <main className={`flex-1 relative ${theme === 'dark' ? 'bg-oled-black' : 'bg-paper-white'} transition-colors duration-500`}>
+          <ContentArea category={activeCategory} theme={theme} />
         </main>
       </div>
     </DeviceFrame>

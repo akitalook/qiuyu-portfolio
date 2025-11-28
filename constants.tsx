@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 export const PERSONAL_INFO = {
-  name: "邱谦业·湫鱼",
+  name: "邱谦业",
   englishName: "Terry Qiu",
   phone: "195-1240-5629",
   email: "akita_terry@163.com",
@@ -147,6 +147,8 @@ export const SKILLS_DATA: Skill[] = [
   { name: "Blender", level: SkillLevel.MEDIUM },
   { name: "C4D", level: SkillLevel.MEDIUM },
   { name: "Ai", level: SkillLevel.MEDIUM },
+  { name: "达芬奇", level: SkillLevel.MEDIUM },
+  { name: "FCP", level: SkillLevel.MEDIUM },
   { name: "Au", level: SkillLevel.LOW },
 ];
 

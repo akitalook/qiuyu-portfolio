@@ -6,6 +6,8 @@ export enum Category {
   SKILLS = 'SKILLS'
 }
 
+export type Theme = 'dark' | 'light';
+
 export interface WorkExperience {
   company: string;
   role: string;
