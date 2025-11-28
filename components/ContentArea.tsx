@@ -24,6 +24,7 @@ const SkillUnit: React.FC<{ skill: Skill; isDark: boolean; idx: number }> = ({ s
     let start = 0;
     const duration = 1000;
     const startTime = performance.now();
+    let animationFrameId: number;
 
     const animateLoad = (currentTime: number) => {
         const elapsed = currentTime - startTime;
@@ -32,18 +33,21 @@ const SkillUnit: React.FC<{ skill: Skill; isDark: boolean; idx: number }> = ({ s
             // Ease out
             const ease = 1 - Math.pow(1 - progress, 3); 
             setDisplayPercent(Math.floor(ease * baseTarget));
-            requestAnimationFrame(animateLoad);
+            animationFrameId = requestAnimationFrame(animateLoad);
         } else {
             setDisplayPercent(baseTarget);
         }
     };
     
     // Add delay based on index
-    const delayTimer = setTimeout(() => {
-        requestAnimationFrame(animateLoad);
+    const delayTimer: ReturnType<typeof setTimeout> = setTimeout(() => {
+        animationFrameId = requestAnimationFrame(animateLoad);
     }, idx * 100);
 
-    return () => clearTimeout(delayTimer);
+    return () => {
+        clearTimeout(delayTimer);
+        cancelAnimationFrame(animationFrameId);
+    };
   }, [baseTarget, idx]);
 
   // Jitter Effect: Randomly fluctuate the number slightly to look like unstable data
@@ -145,15 +149,30 @@ const ProjectCard: React.FC<{
     cardRef.current.style.setProperty('--mouse-y', `${y}px`);
   };
 
+  const handleTouchMove = (e: React.TouchEvent<HTMLButtonElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
+
   return (
     <button
       ref={cardRef}
       onClick={() => setSelectedItem(project)}
       onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
       className={`
         w-full text-left group ${bgCard} border ${borderColor} p-0 overflow-hidden flex transition-all rounded-md relative
-        hover:border-tech-orange/50 hover:shadow-lg
+        hover:border-tech-orange/50 hover:shadow-lg h-auto min-h-[100px]
       `}
+      style={{
+        '--mouse-x': '-100px', 
+        '--mouse-y': '-100px'
+      } as React.CSSProperties}
     >
        {/* Background Noise Texture */}
        <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none"></div>
@@ -167,21 +186,23 @@ const ProjectCard: React.FC<{
        ></div>
 
        <div className="w-2 bg-neutral-800 group-hover:bg-tech-orange transition-colors self-stretch shrink-0 z-10"></div>
-       <div className="p-5 flex-1 min-w-0 relative z-10">
-          <div className="flex justify-between items-start mb-2">
-              <h3 className={`${textColor} font-bold leading-tight group-hover:text-tech-orange transition-colors truncate text-lg pr-2`}>{project.title}</h3>
-              {project.tags?.some(t => t.includes("获奖")) && <Award size={18} className="text-yellow-500 shrink-0 ml-2 drop-shadow-sm" />}
+       <div className="p-4 md:p-5 flex-1 min-w-0 relative z-10 flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-start mb-1">
+                <h3 className={`${textColor} font-bold leading-tight group-hover:text-tech-orange transition-colors text-base md:text-lg pr-2 break-words`}>{project.title}</h3>
+                {project.tags?.some(t => t.includes("获奖")) && <Award size={18} className="text-yellow-500 shrink-0 ml-2 drop-shadow-sm mt-1" />}
+            </div>
+            <div className={`text-xs font-mono ${subTextColor} mb-3 break-words uppercase tracking-wide leading-relaxed`}>{project.subtitle || "PROJECT FILE"}</div>
           </div>
-          <div className={`text-xs font-mono ${subTextColor} mb-3 truncate uppercase tracking-wide`}>{project.subtitle || "PROJECT FILE"}</div>
           
-          <div className={`flex items-center gap-4 text-xs font-mono border-t ${borderColor} pt-3 mt-1`}>
+          <div className={`flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-mono border-t ${borderColor} pt-3 mt-1`}>
               <div className="flex items-center gap-1 shrink-0 px-2 py-1 rounded bg-tech-orange/10 text-tech-orange">
                   <Play size={10} className="fill-current" />
                   <span>{project.stats}</span>
               </div>
               {project.tags && (
-                  <div className="flex gap-2 min-w-0 overflow-hidden opacity-60">
-                       {project.tags.slice(0,2).map((t,ti) => <span key={ti} className={textColor}>#{t}</span>)}
+                  <div className="flex flex-wrap gap-2 min-w-0 opacity-60">
+                       {project.tags.slice(0,3).map((t,ti) => <span key={ti} className={textColor}>#{t}</span>)}
                   </div>
               )}
           </div>
@@ -241,7 +262,7 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
              <div className="w-full h-full overflow-hidden rounded border border-black/10 relative grayscale hover:grayscale-0 transition-all duration-500">
                  <img src={PERSONAL_INFO.avatar} alt={PERSONAL_INFO.name} className="w-full h-full object-cover" />
                  <div className="absolute bottom-2 right-2 bg-tech-orange text-black text-[10px] font-bold px-2 py-0.5 rounded shadow-md font-mono z-10">
-                    ID: 5629
+                    ID: 9527
                  </div>
              </div>
              
@@ -308,14 +329,14 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
 
   const renderExperienceList = () => (
     <div className="flex flex-col h-full animate-slide-in">
-      <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm`}>
+      <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm flex-none`}>
         <div className="flex items-center gap-3">
              <div className="w-2 h-6 bg-tech-orange rounded-sm"></div>
              <h2 className={`text-xl md:text-3xl font-black ${textColor} tracking-tight uppercase`}>Experience_Log</h2>
         </div>
         <span className="text-tech-orange font-mono text-xs mt-1 md:mt-0 px-2 py-1 bg-tech-orange/10 rounded">/mnt/career</span>
       </div>
-      <div className="overflow-y-auto flex-1 p-3 md:p-6 space-y-4 custom-scrollbar">
+      <div className="overflow-y-auto flex-1 p-3 md:p-6 space-y-4 custom-scrollbar pb-24">
         {EXPERIENCE_DATA.map((job, idx) => (
           <button
             key={idx}
@@ -367,14 +388,14 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
 
   const renderProjectList = () => (
     <div className="flex flex-col h-full animate-slide-in">
-       <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm`}>
+       <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm flex-none`}>
          <div className="flex items-center gap-3">
              <div className="w-2 h-6 bg-tech-orange rounded-sm"></div>
              <h2 className={`text-xl md:text-3xl font-black ${textColor} tracking-tight uppercase`}>Works_Database</h2>
         </div>
         <span className="text-tech-orange font-mono text-xs mt-1 md:mt-0 px-2 py-1 bg-tech-orange/10 rounded">/mnt/video_projects</span>
       </div>
-      <div className="overflow-y-auto flex-1 p-3 md:p-6 grid grid-cols-1 gap-4 custom-scrollbar">
+      <div className="overflow-y-auto flex-1 p-3 md:p-6 grid grid-cols-1 gap-4 custom-scrollbar pb-24">
         {PROJECTS_DATA.map((project, idx) => (
            <ProjectCard 
               key={idx}
@@ -394,14 +415,14 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
 
   const renderEducation = () => (
     <div className="flex flex-col h-full animate-slide-in">
-        <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm`}>
+        <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm flex-none`}>
           <div className="flex items-center gap-3">
              <div className="w-2 h-6 bg-tech-orange rounded-sm"></div>
              <h2 className={`text-xl md:text-3xl font-black ${textColor} tracking-tight uppercase`}>Education_Log</h2>
           </div>
           <span className="text-tech-orange font-mono text-xs mt-1 md:mt-0 px-2 py-1 bg-tech-orange/10 rounded">/mnt/academic</span>
         </div>
-        <div className="overflow-y-auto flex-1 p-8 space-y-10 custom-scrollbar relative">
+        <div className="overflow-y-auto flex-1 p-8 space-y-10 custom-scrollbar relative pb-24">
           
           {/* Vertical Time Line */}
           <div className={`absolute left-8 top-10 bottom-10 w-[2px] ${isDark ? 'bg-[#333]' : 'bg-[#ddd]'}`}></div>
@@ -461,7 +482,7 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
   const renderSkills = () => {
     return (
       <div className="flex flex-col h-full animate-slide-in">
-         <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm`}>
+         <div className={`p-4 md:p-6 border-b-2 ${borderColor} flex flex-col md:flex-row md:justify-between md:items-end ${bgHeader} backdrop-blur-sm z-10 sticky top-0 shadow-sm flex-none`}>
             <div className="flex items-center gap-3">
                  <div className="w-2 h-6 bg-tech-orange rounded-sm"></div>
                  <h2 className={`text-xl md:text-3xl font-black ${textColor} tracking-tight uppercase`}>Sys_Modules</h2>
@@ -469,7 +490,7 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
             <span className="text-tech-orange font-mono text-xs mt-1 md:mt-0 px-2 py-1 bg-tech-orange/10 rounded">/usr/bin/skills</span>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar pb-24">
           <div className="max-w-5xl mx-auto flex flex-col min-h-full">
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-8">
