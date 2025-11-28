@@ -10,7 +10,7 @@ import {
 export const PERSONAL_INFO = {
   name: "邱谦业",
   englishName: "Terry Qiu",
-  phone: "195-1240-5629",
+  phone: "19512405629",
   email: "akita_terry@163.com",
   location: "上海 松江 九亭",
   role: "剪辑师 / 动效师",

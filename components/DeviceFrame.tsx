@@ -10,12 +10,12 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, theme }) => 
   const isDark = theme === 'dark';
 
   return (
-    <div className={`w-full h-[100dvh] md:h-screen flex items-center justify-center transition-colors duration-700 md:p-8 overflow-hidden
+    <div className={`w-full h-full md:h-screen flex flex-col items-center justify-center transition-colors duration-700 md:p-8 overflow-hidden
       ${isDark ? 'bg-[#0f0f12]' : 'bg-[#e0e2e5]'}
     `}>
       {/* The Physical Device Casing */}
       <div className={`
-        relative w-full max-w-5xl h-full md:h-[820px] 
+        relative w-full max-w-5xl h-[100dvh] md:h-[90vh] md:max-h-[900px]
         ${isDark 
           ? 'bg-[#1a1a1a] shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.1)]' 
           : 'bg-[#d8d8dd] shadow-[0_20px_50px_rgba(0,0,0,0.2),inset_0_1px_1px_rgba(255,255,255,0.8)]'}
@@ -82,7 +82,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, theme }) => 
             ${isDark 
               ? 'bg-black border-[#333] shadow-[inset_0_0_20px_rgba(0,0,0,1)]' 
               : 'bg-[#f0f0f2] border-[#c0c0c0] shadow-[inset_0_0_15px_rgba(0,0,0,0.15)]'}
-            border-[6px] 
+            border-2 md:border-[6px] 
         `}>
            
            {/* Screen Glare / Reflection (Diagonal) */}

@@ -21,7 +21,6 @@ const SkillUnit: React.FC<{ skill: Skill; isDark: boolean; idx: number }> = ({ s
 
   useEffect(() => {
     // Initial load up animation
-    let start = 0;
     const duration = 1000;
     const startTime = performance.now();
     let animationFrameId: number;
@@ -186,17 +185,24 @@ const ProjectCard: React.FC<{
        ></div>
 
        <div className="w-2 bg-neutral-800 group-hover:bg-tech-orange transition-colors self-stretch shrink-0 z-10"></div>
-       <div className="p-4 md:p-5 flex-1 min-w-0 relative z-10 flex flex-col justify-between">
+       <div className="p-4 md:p-5 flex-1 min-w-0 relative z-10 flex flex-col justify-between gap-2">
           <div>
-            <div className="flex justify-between items-start mb-1">
-                <h3 className={`${textColor} font-bold leading-tight group-hover:text-tech-orange transition-colors text-base md:text-lg pr-2 break-words`}>{project.title}</h3>
-                {project.tags?.some(t => t.includes("获奖")) && <Award size={18} className="text-yellow-500 shrink-0 ml-2 drop-shadow-sm mt-1" />}
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1 gap-1">
+                <h3 className={`${textColor} font-bold leading-snug group-hover:text-tech-orange transition-colors text-base md:text-lg break-words whitespace-normal text-left`}>{project.title}</h3>
+                {project.tags?.some(t => t.includes("获奖")) && (
+                    <div className="flex items-center text-yellow-500 shrink-0 drop-shadow-sm mt-1 self-start md:self-auto">
+                        <Award size={16} />
+                        <span className="text-[10px] font-bold ml-1 uppercase tracking-wider">Award</span>
+                    </div>
+                )}
             </div>
-            <div className={`text-xs font-mono ${subTextColor} mb-3 break-words uppercase tracking-wide leading-relaxed`}>{project.subtitle || "PROJECT FILE"}</div>
+            <div className={`text-xs font-mono ${subTextColor} mb-2 break-words whitespace-normal uppercase tracking-wide leading-relaxed text-left`}>
+                {project.subtitle || "PROJECT FILE"}
+            </div>
           </div>
           
-          <div className={`flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-mono border-t ${borderColor} pt-3 mt-1`}>
-              <div className="flex items-center gap-1 shrink-0 px-2 py-1 rounded bg-tech-orange/10 text-tech-orange">
+          <div className={`flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-mono border-t ${borderColor} pt-3 mt-auto`}>
+              <div className="flex items-center gap-1 shrink-0 px-2 py-1 rounded bg-tech-orange/10 text-tech-orange whitespace-nowrap">
                   <Play size={10} className="fill-current" />
                   <span>{project.stats}</span>
               </div>
@@ -234,94 +240,96 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ category, theme }) => 
   }, [category]);
 
   const renderProfile = () => (
-    <div className="h-full flex flex-col justify-center items-center text-center p-8 animate-slide-in relative overflow-hidden">
+    <div className="h-full animate-slide-in relative overflow-y-auto custom-scrollbar">
       
       {/* Decorative Background Elements */}
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none fixed" 
            style={{ backgroundImage: `radial-gradient(circle at center, ${isDark ? '#444' : '#999'} 1px, transparent 1px)`, backgroundSize: '30px 30px' }}>
       </div>
       <div className={`absolute top-0 left-0 w-full h-1 ${isDark ? 'bg-tech-orange/20' : 'bg-tech-orange/10'}`}></div>
-
-      {/* ID Badge Container - Skeuomorphic */}
-      <div className="relative group mb-8 z-10 perspective-1000">
-         <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-16 h-8 rounded-t md:w-20 md:h-10 border-t border-x z-20 flex items-center justify-center
-             ${isDark ? 'bg-[#222] border-[#333]' : 'bg-[#ddd] border-[#bbb]'}
-             shadow-lg
-         `}>
-             <div className="w-8 h-1 bg-black/30 rounded-full"></div>
-         </div>
-
-         <div className={`
-             relative w-40 h-40 md:w-48 md:h-48 rounded-lg p-2 transition-transform duration-500 group-hover:scale-105
-             ${isDark 
-                ? 'bg-[#151515] border border-[#333] shadow-[0_10px_30px_rgba(0,0,0,0.8)]' 
-                : 'bg-white border border-[#ccc] shadow-[0_10px_20px_rgba(0,0,0,0.1)]'}
-         `}>
-             <div className="absolute inset-0 bg-noise opacity-[0.05] pointer-events-none rounded-lg"></div>
-
-             <div className="w-full h-full overflow-hidden rounded border border-black/10 relative grayscale hover:grayscale-0 transition-all duration-500">
-                 <img src={PERSONAL_INFO.avatar} alt={PERSONAL_INFO.name} className="w-full h-full object-cover" />
-                 <div className="absolute bottom-2 right-2 bg-tech-orange text-black text-[10px] font-bold px-2 py-0.5 rounded shadow-md font-mono z-10">
-                    ID: 9527
-                 </div>
-             </div>
-             
-             <div className="absolute -top-3 -right-3 w-12 h-6 bg-yellow-400/80 rotate-12 shadow-sm backdrop-blur-sm z-30"></div>
-         </div>
-      </div>
       
-      <div className="z-10 relative flex flex-col items-center">
-        {/* Flip Card Name */}
-        <div className="perspective-1000 mb-6 cursor-pointer" onClick={() => setIsNameFlipped(!isNameFlipped)}>
-             <div className={`relative h-16 w-64 transition-transform duration-500 transform-style-3d ${isNameFlipped ? 'rotate-y-180' : ''}`}>
-                 
-                 {/* Front Side: Nickname */}
-                 <div className={`absolute inset-0 backface-hidden rounded-lg flex items-center justify-center border shadow-xl
-                      ${isDark ? 'bg-[#1a1a1a] border-[#333]' : 'bg-white border-[#ddd]'}
-                 `}>
-                      <h1 className={`text-4xl font-bold font-sans tracking-widest ${textColor}`}>湫鱼</h1>
-                      <div className="absolute bottom-1 right-2 text-[10px] text-tech-orange font-mono animate-pulse">CLICK</div>
-                 </div>
+      <div className="min-h-full flex flex-col justify-center items-center text-center p-6 md:p-8 pb-24">
+        {/* ID Badge Container - Skeuomorphic */}
+        <div className="relative group mb-8 z-10 perspective-1000">
+           <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-16 h-8 rounded-t md:w-20 md:h-10 border-t border-x z-20 flex items-center justify-center
+               ${isDark ? 'bg-[#222] border-[#333]' : 'bg-[#ddd] border-[#bbb]'}
+               shadow-lg
+           `}>
+               <div className="w-8 h-1 bg-black/30 rounded-full"></div>
+           </div>
 
-                 {/* Back Side: Real Name */}
-                 <div className={`absolute inset-0 backface-hidden rounded-lg flex items-center justify-center border shadow-xl rotate-y-180
-                      ${isDark ? 'bg-[#222] border-tech-orange text-tech-orange' : 'bg-orange-50 border-orange-200 text-tech-orange'}
-                 `}>
-                      <h1 className="text-3xl font-bold font-sans tracking-wide">邱谦业</h1>
-                 </div>
+           <div className={`
+               relative w-40 h-40 md:w-48 md:h-48 rounded-lg p-2 transition-transform duration-500 group-hover:scale-105
+               ${isDark 
+                  ? 'bg-[#151515] border border-[#333] shadow-[0_10px_30px_rgba(0,0,0,0.8)]' 
+                  : 'bg-white border border-[#ccc] shadow-[0_10px_20px_rgba(0,0,0,0.1)]'}
+           `}>
+               <div className="absolute inset-0 bg-noise opacity-[0.05] pointer-events-none rounded-lg"></div>
 
-             </div>
+               <div className="w-full h-full overflow-hidden rounded border border-black/10 relative grayscale hover:grayscale-0 transition-all duration-500">
+                   <img src={PERSONAL_INFO.avatar} alt={PERSONAL_INFO.name} className="w-full h-full object-cover" />
+                   <div className="absolute bottom-2 right-2 bg-tech-orange text-black text-[10px] font-bold px-2 py-0.5 rounded shadow-md font-mono z-10">
+                      ID: 5629
+                   </div>
+               </div>
+               
+               <div className="absolute -top-3 -right-3 w-12 h-6 bg-yellow-400/80 rotate-12 shadow-sm backdrop-blur-sm z-30"></div>
+           </div>
         </div>
         
-        <div className="inline-flex items-center gap-3 mb-8 px-4 py-2 border-y border-tech-orange/30">
-            <Star size={14} className="text-tech-orange fill-tech-orange" />
-            <h2 className={`text-xl font-black font-sans ${isDark ? 'text-white' : 'text-black'} tracking-widest uppercase`}>{PERSONAL_INFO.role}</h2>
-            <Star size={14} className="text-tech-orange fill-tech-orange" />
-        </div>
-        
-        <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-mono ${subTextColor} w-full max-w-2xl mx-auto`}>
-            {[
-                { icon: <Phone size={14}/>, text: PERSONAL_INFO.phone },
-                { icon: <Mail size={14}/>, text: PERSONAL_INFO.email, link: true },
-                { icon: <MapPin size={14}/>, text: PERSONAL_INFO.location }
-            ].map((item, i) => (
-                <div key={i} className={`
-                    group/card flex flex-col items-center justify-center p-3 rounded border shadow-sm transition-all hover:scale-105
-                    ${isDark ? 'bg-[#151515] border-[#333] hover:border-tech-orange hover:bg-[#1a1a1a]' : 'bg-white border-[#ddd] hover:border-tech-orange hover:bg-orange-50/50'}
-                `}>
-                    <div className="text-tech-orange mb-1 group-hover/card:scale-110 transition-transform">{item.icon}</div>
-                    {item.link ? (
-                        <a href={`mailto:${item.text}`} className="hover:text-tech-orange transition-colors">{item.text}</a>
-                    ) : (
-                        <span className="group-hover/card:text-tech-orange transition-colors">{item.text}</span>
-                    )}
-                </div>
-            ))}
-        </div>
+        <div className="z-10 relative flex flex-col items-center w-full">
+          {/* Flip Card Name */}
+          <div className="perspective-1000 mb-6 cursor-pointer" onClick={() => setIsNameFlipped(!isNameFlipped)}>
+               <div className={`relative h-16 w-64 transition-transform duration-500 transform-style-3d ${isNameFlipped ? 'rotate-y-180' : ''}`}>
+                   
+                   {/* Front Side: Nickname */}
+                   <div className={`absolute inset-0 backface-hidden rounded-lg flex items-center justify-center border shadow-xl
+                        ${isDark ? 'bg-[#1a1a1a] border-[#333]' : 'bg-white border-[#ddd]'}
+                   `}>
+                        <h1 className={`text-4xl font-bold font-sans tracking-widest ${textColor}`}>湫鱼</h1>
+                        <div className="absolute bottom-1 right-2 text-[10px] text-tech-orange font-mono animate-pulse">CLICK</div>
+                   </div>
 
-        <div className={`mt-12 text-industrial-gray text-xs font-mono max-w-md mx-auto border-t border-dashed ${borderColor} pt-4 opacity-70`}>
-            <p className="mb-1 text-tech-orange animate-pulse">● SYSTEM STATUS: ONLINE</p>
-            <p>AVAILABLE FOR NEW OPPORTUNITIES</p>
+                   {/* Back Side: Real Name */}
+                   <div className={`absolute inset-0 backface-hidden rounded-lg flex items-center justify-center border shadow-xl rotate-y-180
+                        ${isDark ? 'bg-[#222] border-tech-orange text-tech-orange' : 'bg-orange-50 border-orange-200 text-tech-orange'}
+                   `}>
+                        <h1 className="text-3xl font-bold font-sans tracking-wide">邱谦业</h1>
+                   </div>
+
+               </div>
+          </div>
+          
+          <div className="inline-flex items-center gap-3 mb-8 px-4 py-2 border-y border-tech-orange/30">
+              <Star size={14} className="text-tech-orange fill-tech-orange" />
+              <h2 className={`text-xl font-black font-sans ${isDark ? 'text-white' : 'text-black'} tracking-widest uppercase`}>{PERSONAL_INFO.role}</h2>
+              <Star size={14} className="text-tech-orange fill-tech-orange" />
+          </div>
+          
+          <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-mono ${subTextColor} w-full max-w-2xl mx-auto`}>
+              {[
+                  { icon: <Phone size={14}/>, text: PERSONAL_INFO.phone },
+                  { icon: <Mail size={14}/>, text: PERSONAL_INFO.email, link: true },
+                  { icon: <MapPin size={14}/>, text: PERSONAL_INFO.location }
+              ].map((item, i) => (
+                  <div key={i} className={`
+                      group/card flex flex-col items-center justify-center p-3 rounded border shadow-sm transition-all hover:scale-105
+                      ${isDark ? 'bg-[#151515] border-[#333] hover:border-tech-orange hover:bg-[#1a1a1a]' : 'bg-white border-[#ddd] hover:border-tech-orange hover:bg-orange-50/50'}
+                  `}>
+                      <div className="text-tech-orange mb-1 group-hover/card:scale-110 transition-transform">{item.icon}</div>
+                      {item.link ? (
+                          <a href={`mailto:${item.text}`} className="hover:text-tech-orange transition-colors">{item.text}</a>
+                      ) : (
+                          <span className="group-hover/card:text-tech-orange transition-colors text-center">{item.text}</span>
+                      )}
+                  </div>
+              ))}
+          </div>
+
+          <div className={`mt-12 text-industrial-gray text-xs font-mono max-w-md mx-auto border-t border-dashed ${borderColor} pt-4 opacity-70`}>
+              <p className="mb-1 text-tech-orange animate-pulse">● SYSTEM STATUS: ONLINE</p>
+              <p>AVAILABLE FOR NEW OPPORTUNITIES</p>
+          </div>
         </div>
       </div>
     </div>
