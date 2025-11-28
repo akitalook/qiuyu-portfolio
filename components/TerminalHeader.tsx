@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Battery, Wifi } from 'lucide-react';
+import { Battery, Wifi, Sun, Moon } from 'lucide-react';
 import { Theme } from '../types';
 
 interface TerminalHeaderProps {
@@ -55,29 +55,28 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({ theme, onToggleT
 
       <div className="flex items-center gap-3 md:gap-5 shrink-0 pr-2">
         
-        {/* Skeuomorphic Toggle Switch */}
-        <div className="flex items-center gap-2 mr-2">
-            <span className={`text-[9px] ${isDark ? 'text-white/30' : 'text-black/30'}`}>MODE</span>
-            <button 
-                onClick={onToggleTheme}
-                className={`
-                    relative w-12 h-6 rounded-full border transition-all duration-300 shadow-inner
-                    ${isDark ? 'bg-[#0a0a0a] border-[#333]' : 'bg-[#d1d1d1] border-[#bbb]'}
-                `}
-            >
-                {/* The Switch Handle */}
-                <div className={`
-                    absolute top-0.5 w-5 h-4.5 rounded-full shadow-md transition-all duration-300 flex items-center justify-center
-                    ${isDark 
-                        ? 'left-6 bg-neutral-800 border border-neutral-600 shadow-[2px_2px_5px_rgba(0,0,0,0.8)]' 
-                        : 'left-0.5 bg-white border border-neutral-200 shadow-[1px_1px_3px_rgba(0,0,0,0.2)]'}
-                `}>
-                    {/* Grip lines on switch */}
-                    <div className="w-[2px] h-2 bg-black/10 mx-[1px]"></div>
-                    <div className="w-[2px] h-2 bg-black/10 mx-[1px]"></div>
-                </div>
-            </button>
-        </div>
+        {/* Skeuomorphic Circular Toggle Button */}
+        <button 
+            onClick={onToggleTheme}
+            className={`
+                relative w-8 h-8 rounded-full border transition-all duration-300 flex items-center justify-center group outline-none
+                ${isDark 
+                    ? 'bg-[#1a1a1a] border-[#333] shadow-[2px_2px_5px_#000,-1px_-1px_3px_#333] active:translate-y-[1px] active:shadow-[inset_2px_2px_5px_#000]' 
+                    : 'bg-[#e0e0e0] border-[#ccc] shadow-[3px_3px_6px_#bebebe,-3px_-3px_6px_#ffffff] active:translate-y-[1px] active:shadow-[inset_2px_2px_5px_#bebebe]'
+                }
+            `}
+            aria-label="Toggle Theme"
+        >
+            {/* Tactile Surface Noise */}
+            <div className="absolute inset-0 bg-noise opacity-[0.1] rounded-full pointer-events-none"></div>
+            
+            {/* Icon */}
+            {isDark ? (
+                <Moon size={14} className="text-tech-orange drop-shadow-[0_0_5px_rgba(255,85,0,0.8)] relative z-10" />
+            ) : (
+                <Sun size={14} className="text-orange-500 relative z-10" />
+            )}
+        </button>
 
         <div className={`h-8 w-[1px] ${isDark ? 'bg-[#222]' : 'bg-[#ccc]'}`}></div>
 

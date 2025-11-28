@@ -187,7 +187,7 @@ const ProjectCard: React.FC<{
        <div className="w-2 bg-neutral-800 group-hover:bg-tech-orange transition-colors self-stretch shrink-0 z-10"></div>
        <div className="p-4 md:p-5 flex-1 min-w-0 relative z-10 flex flex-col justify-between gap-2">
           <div>
-            <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1 gap-1">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-2 gap-1">
                 <h3 className={`${textColor} font-bold leading-snug group-hover:text-tech-orange transition-colors text-base md:text-lg break-words whitespace-normal text-left`}>{project.title}</h3>
                 {project.tags?.some(t => t.includes("获奖")) && (
                     <div className="flex items-center text-yellow-500 shrink-0 drop-shadow-sm mt-1 self-start md:self-auto">
@@ -196,16 +196,21 @@ const ProjectCard: React.FC<{
                     </div>
                 )}
             </div>
+
+            {/* Main Content Area: Stats Badge */}
+            <div className="flex items-center gap-2 mb-3">
+                <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono font-bold tracking-tight shadow-sm border ${isDark ? 'bg-tech-orange/15 text-tech-orange border-tech-orange/20' : 'bg-orange-50 text-orange-600 border-orange-200'}`}>
+                    <Play size={10} className="fill-current" />
+                    <span>{project.stats}</span>
+                </div>
+            </div>
+
             <div className={`text-xs font-mono ${subTextColor} mb-2 break-words whitespace-normal uppercase tracking-wide leading-relaxed text-left`}>
                 {project.subtitle || "PROJECT FILE"}
             </div>
           </div>
           
           <div className={`flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-mono border-t ${borderColor} pt-3 mt-auto`}>
-              <div className="flex items-center gap-1 shrink-0 px-2 py-1 rounded bg-tech-orange/10 text-tech-orange whitespace-nowrap">
-                  <Play size={10} className="fill-current" />
-                  <span>{project.stats}</span>
-              </div>
               {project.tags && (
                   <div className="flex flex-wrap gap-2 min-w-0 opacity-60">
                        {project.tags.slice(0,3).map((t,ti) => <span key={ti} className={textColor}>#{t}</span>)}
