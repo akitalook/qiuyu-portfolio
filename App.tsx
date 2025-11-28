@@ -22,7 +22,8 @@ function App() {
           onSelect={setActiveCategory}
           theme={theme}
         />
-        <main className={`flex-1 relative ${theme === 'dark' ? 'bg-oled-black' : 'bg-paper-white'} transition-colors duration-500`}>
+        {/* Added min-w-0 to prevent flex item from overflowing parent width on mobile */}
+        <main className={`flex-1 min-w-0 overflow-x-hidden relative ${theme === 'dark' ? 'bg-oled-black' : 'bg-paper-white'} transition-colors duration-500`}>
           <ContentArea category={activeCategory} theme={theme} />
         </main>
       </div>
