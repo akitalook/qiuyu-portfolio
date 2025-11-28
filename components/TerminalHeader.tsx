@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Battery, Radio, Sun, Moon } from 'lucide-react';
+import { Battery, Wifi } from 'lucide-react';
 import { Theme } from '../types';
 
 interface TerminalHeaderProps {
@@ -23,33 +23,74 @@ export const TerminalHeader: React.FC<TerminalHeaderProps> = ({ theme, onToggleT
 
   return (
     <div className={`
-      flex items-center justify-between px-3 md:px-6 py-3 border-b text-xs font-mono uppercase tracking-widest select-none z-10 relative transition-colors duration-500
-      ${isDark ? 'bg-oled-black border-neutral-800 text-industrial-gray' : 'bg-paper-white border-neutral-300 text-neutral-600'}
+      flex items-center justify-between px-3 md:px-5 py-3 border-b-2 text-xs font-mono uppercase tracking-widest select-none z-10 relative transition-colors duration-500
+      ${isDark 
+        ? 'bg-[#151515] border-[#222] text-industrial-gray shadow-[0_5px_15px_rgba(0,0,0,0.5)]' 
+        : 'bg-[#e8e8e8] border-[#d1d1d1] text-neutral-600 shadow-[0_2px_10px_rgba(0,0,0,0.05)]'}
     `}>
-      <div className="flex items-center gap-2 md:gap-4 min-w-0">
-        <span className="text-tech-orange font-bold whitespace-nowrap">TERRY.OS <span className="text-[10px] opacity-60 hidden xs:inline">v2.4</span></span>
-        <span className="flex items-center gap-1 opacity-70"><Radio size={12} /> <span className="hidden sm:inline">5G</span></span>
+      
+      {/* Texture for the panel */}
+      <div className="absolute inset-0 bg-noise opacity-[0.05] pointer-events-none"></div>
+
+      {/* Left Screw */}
+      <div className={`hidden md:block absolute left-2 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border ${isDark ? 'border-white/10 bg-black/50' : 'border-black/10 bg-white/50'}`}>
+         <div className="w-full h-[1px] bg-current opacity-30 rotate-45 absolute top-1/2 -translate-y-1/2"></div>
+      </div>
+
+      <div className="flex items-center gap-2 md:gap-4 min-w-0 pl-4">
+        <div className={`flex items-center gap-2 px-2 py-1 rounded border ${isDark ? 'bg-black/30 border-white/5' : 'bg-white/50 border-black/5'}`}>
+            <div className="w-2 h-2 bg-tech-orange rounded-full animate-pulse shadow-[0_0_5px_#ff5500]"></div>
+            <span className="text-tech-orange font-black whitespace-nowrap tracking-tighter">TERRY.OS <span className="text-[10px] opacity-60 font-normal ml-1">v2.4</span></span>
+        </div>
+        <div className="h-4 w-[1px] bg-current opacity-20 hidden md:block"></div>
+        <span className="flex items-center gap-1 opacity-70"><Wifi size={12} /> <span className="hidden sm:inline">5G_NET</span></span>
       </div>
       
-      {/* Hidden on mobile to prevent overlap */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 opacity-50 hidden md:block">
+      {/* Center Label - hidden on mobile */}
+      <div className={`absolute left-1/2 transform -translate-x-1/2 hidden md:block px-3 py-1 rounded text-[10px] font-bold tracking-[0.2em] border
+          ${isDark ? 'bg-[#0a0a0a] border-[#333] text-neutral-500 shadow-inner' : 'bg-[#f0f0f0] border-[#ccc] text-neutral-400 shadow-inner'}
+      `}>
         SYS.READY
       </div>
 
-      <div className="flex items-center gap-2 md:gap-4 shrink-0">
-        {/* Theme Toggle */}
-        <button 
-          onClick={onToggleTheme} 
-          className={`p-1.5 rounded-full transition-colors ${isDark ? 'hover:bg-neutral-800 text-neutral-400' : 'hover:bg-neutral-200 text-neutral-500'}`}
-        >
-          {isDark ? <Sun size={14} /> : <Moon size={14} />}
-        </button>
-
-        <span className="opacity-90">{time}</span>
-        <div className="flex items-center gap-1 text-tech-orange">
-          <span className="text-[10px] hidden xs:inline">94%</span>
-          <Battery size={14} className="fill-current" />
+      <div className="flex items-center gap-3 md:gap-5 shrink-0 pr-2">
+        
+        {/* Skeuomorphic Toggle Switch */}
+        <div className="flex items-center gap-2 mr-2">
+            <span className={`text-[9px] ${isDark ? 'text-white/30' : 'text-black/30'}`}>MODE</span>
+            <button 
+                onClick={onToggleTheme}
+                className={`
+                    relative w-12 h-6 rounded-full border transition-all duration-300 shadow-inner
+                    ${isDark ? 'bg-[#0a0a0a] border-[#333]' : 'bg-[#d1d1d1] border-[#bbb]'}
+                `}
+            >
+                {/* The Switch Handle */}
+                <div className={`
+                    absolute top-0.5 w-5 h-4.5 rounded-full shadow-md transition-all duration-300 flex items-center justify-center
+                    ${isDark 
+                        ? 'left-6 bg-neutral-800 border border-neutral-600 shadow-[2px_2px_5px_rgba(0,0,0,0.8)]' 
+                        : 'left-0.5 bg-white border border-neutral-200 shadow-[1px_1px_3px_rgba(0,0,0,0.2)]'}
+                `}>
+                    {/* Grip lines on switch */}
+                    <div className="w-[2px] h-2 bg-black/10 mx-[1px]"></div>
+                    <div className="w-[2px] h-2 bg-black/10 mx-[1px]"></div>
+                </div>
+            </button>
         </div>
+
+        <div className={`h-8 w-[1px] ${isDark ? 'bg-[#222]' : 'bg-[#ccc]'}`}></div>
+
+        <span className="opacity-90 font-mono tabular-nums tracking-wider">{time}</span>
+        
+        <div className="flex items-center gap-1 text-tech-orange">
+          <Battery size={16} className="fill-current drop-shadow-[0_0_3px_rgba(255,85,0,0.4)]" />
+        </div>
+      </div>
+      
+      {/* Right Screw */}
+      <div className={`hidden md:block absolute right-2 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border ${isDark ? 'border-white/10 bg-black/50' : 'border-black/10 bg-white/50'}`}>
+         <div className="w-full h-[1px] bg-current opacity-30 rotate-12 absolute top-1/2 -translate-y-1/2"></div>
       </div>
     </div>
   );
