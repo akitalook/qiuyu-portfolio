@@ -84,7 +84,7 @@ export const PROJECTS_DATA: Project[] = [
     title: "湫鱼 2021-2022 作品汇总",
     subtitle: "作品集",
     link: "https://www.xinpianchang.com/a11994547?from=UserProfile",
-    description: "汇集了在校期间&在字节实习期间的作品、产出和练习",
+    description: "汇集了在校期间&在字节实习期间的作品、产出和练习。",
     tags: ["作品集", "AE", "3D","剪辑"]
   },
   {
@@ -110,14 +110,6 @@ export const PROJECTS_DATA: Project[] = [
     link: "https://www.bilibili.com/video/BV1bu411G76Z/",
     description: "B站全站排行榜最高第37名。硬核医学科普，解释免疫系统工作原理。",
     tags: ["获奖作品", "硬核科普"]
-  },
-  {
-    title: "凶手如何把投毒伪装成“意外”？",
-    subtitle: "B站第258期每周必看",
-    stats: "播放量 205.45W",
-    link: "https://www.bilibili.com/video/BV1GF4m1E73H/",
-    description: "法医毒理学可视化，解析复杂化学成分与人体反应。",
-    tags: ["悬疑科普", "每周必看"]
   },
   {
     title: "恋爱脑的脑子跟“正常人”不一样吗？",
