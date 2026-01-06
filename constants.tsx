@@ -81,6 +81,13 @@ export const EXPERIENCE_DATA: WorkExperience[] = [
 
 export const PROJECTS_DATA: Project[] = [
   {
+    title: "湫鱼 2021-2022 作品汇总",
+    subtitle: "作品集",
+    link: "https://www.xinpianchang.com/a11994547?from=UserProfile",
+    description: "汇集了在校期间&在字节实习期间的作品、产出和练习",
+    tags: ["作品集", "AE", "3D","剪辑"]
+  },
+  {
     title: "每天凌晨3点睡，多少天会死？",
     subtitle: "B站第277期每周必看",
     stats: "播放量 1217.4万",
