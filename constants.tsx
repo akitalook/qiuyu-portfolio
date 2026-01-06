@@ -13,8 +13,8 @@ export const PERSONAL_INFO = {
   phone: "19512405629",
   email: "akita_terry@163.com",
   location: "上海 松江 九亭",
-  role: "剪辑师 / 动效师",
-  avatar: "https://youke1.picui.cn/s1/2025/11/27/692805564d52c.png" 
+  role: "剪辑/动效",
+  avatar: "https://i.111666.best/image/ZXCBdb0k8WG98jb3OXTzIF.png" 
 };
 
 export const EXPERIENCE_DATA: WorkExperience[] = [
